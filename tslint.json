@@ -1,0 +1,14 @@
+{
+  "rules": {
+    "no-unused-variable": true,
+    "indent": [
+      true,
+			"tabs",
+			2,
+    ],
+    "trailing-comma": [true, {
+      "multiline": "always"
+    }],
+    "quotemark": [true, "single"],
+  },
+}
