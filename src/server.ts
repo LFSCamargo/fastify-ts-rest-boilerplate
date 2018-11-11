@@ -10,13 +10,13 @@ server.get('/', (req, res) => {
   res.send('Welcome to the Typescript Boilerplate')
 });
 
-server.post('/api/addUser', async (req, res) => {
+server.post('/api/signup', async (req, res) => {
   const { body } = req;
 
-  const user = await userMethods.addUser({ ...body });
+  const token = await userMethods.addUser({ ...body });
 
   const response = JSON.stringify({
-    user,
+    token,
   });
 
   res.send(response);
@@ -37,7 +37,7 @@ server.post('/api/users', async (req, res) => {
 server.post('/api/login', async (req, res) => {
   const { body } = req;
 
-  const token = userMethods.login({ ...body });
+  const token = await userMethods.login({ ...body });
 
   const response = JSON.stringify({
     token

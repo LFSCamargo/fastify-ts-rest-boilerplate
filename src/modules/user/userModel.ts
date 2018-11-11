@@ -8,6 +8,7 @@ export interface UserType extends mongoose.Document {
   email: string;
   active: boolean;
   authenticate: (plainPassword: string) => boolean,
+  encryptPassword: (password: string) => string,
 }
 
 const Schema = new mongoose.Schema(
@@ -38,21 +39,5 @@ const Schema = new mongoose.Schema(
     collection: 'user',
   },
 );
-
-Schema.methods = {
-  authenticate(plainPassword) {
-    return bcrypt.compareSync(plainPassword, this.password)
-  },
-  encryptPassword(password) {
-    return bcrypt.hashSync(password, 8);
-  },
-}
-
-Schema.pre('save', (next) => {
-  if (this.isModified('password')) {
-    this.password = this.encryptPassword(this.password);
-  }
-  return next();
-})
 
 export default mongoose.model<UserType>('User', Schema);

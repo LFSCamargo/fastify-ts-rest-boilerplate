@@ -1,6 +1,7 @@
 import * as jwt from 'jsonwebtoken';
 import User from './userModel';
 import { KEY } from '../../config';
+import { encryptPassword, authenticate } from '../../utils/encryption';
 
 interface AddUser {
   name: string;
@@ -22,38 +23,38 @@ interface Login {
 export default {
   /**
    * Gets user using the email
-   * @constructor
    * @param {string} email - The title of the book.
    */
   user: async (email: string) => await User.findOne({ email }),
 
   /**
    * User login on the api
-   * @constructor
    * @param {string} password - User password
    * @param {string} email - User email
    */
   login: async ({ password, email }: AddUser) => {
     const user = await User.findOne({ email });
-
+    
     if (!user) {
       throw new Error('Invalid email or password');
     }
 
-    const isPasswordCorrect = user.authenticate(password);
+    const isPasswordCorrect = authenticate(password, user.password);
+
+    console.log(isPasswordCorrect);
+    
 
     if (!isPasswordCorrect) {
       throw new Error('Invalid email or password')
     }
 
-    const token = `JWT ${jwt.sign({ id: email }, KEY)}`;
+    const token = `JWT ${jwt.sign({ id: user.email }, KEY)}`;
 
     return token;
   },
 
   /**
    * Register a user on the api
-   * @constructor
    * @param {string} name - User full name
    * @param {string} password - User password
    * @param {string} email - User email
@@ -67,7 +68,7 @@ export default {
 
     const newUser = new User({
       name,
-      password,
+      password: encryptPassword(password),
       email
     });
 
@@ -80,7 +81,6 @@ export default {
 
   /**
    * List users registered on the api
-   * @constructor
    * @param {string} search - Search a user by name
    * @param {string} after - Skips n rows
    * @param {string} first - Number of rows per page
