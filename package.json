@@ -23,6 +23,7 @@
   },
   "scripts": {
     "start": "ts-node src/server.ts",
+    "docker:up": "docker-compose up --build",
     "watch": "nodemon --watch 'src/**/*.ts' --ignore 'src/**/*.spec.ts' --exec 'ts-node' src/server.ts"
   }
 }
