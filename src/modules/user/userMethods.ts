@@ -33,16 +33,13 @@ export default {
    * @param {string} email - User email
    */
   login: async ({ password, email }: AddUser) => {
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email }).select('+password');
     
     if (!user) {
       throw new Error('Invalid email or password');
     }
-
-    const isPasswordCorrect = authenticate(password, user.password);
-
-    console.log(isPasswordCorrect);
     
+    const isPasswordCorrect = authenticate(password, user.password);
 
     if (!isPasswordCorrect) {
       throw new Error('Invalid email or password')
@@ -77,30 +74,5 @@ export default {
     const token = `JWT ${jwt.sign({ id: email }, KEY)}`;
 
     return token;
-  },
-
-  /**
-   * List users registered on the api
-   * @param {string} search - Search a user by name
-   * @param {string} after - Skips n rows
-   * @param {string} first - Number of rows per page
-   */
-  users: async ({ search, after, first }: GetUsers) => {
-    const where = search ? {
-      name: {
-        $regex: new RegExp(`^${search}^`, 'ig'),
-      },
-    } : {};
-
-    const users = !after
-      ? User.find(where).limit(first)
-      : User.find(where)
-        .skip(after)
-        .limit(first);
-
-    return {
-      count: User.find({}).count(),
-      users,
-    };
   },
 };

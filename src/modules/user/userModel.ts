@@ -19,7 +19,7 @@ const Schema = new mongoose.Schema(
     },
     password: {
       type: String,
-      hidden: true,
+      select: false
     },
     email: {
       type: String,

@@ -15,23 +15,9 @@ server.post('/api/signup', async (req, res) => {
 
   const token = await userMethods.addUser({ ...body });
 
-  const response = JSON.stringify({
-    token,
+  res.send({
+    token
   });
-
-  res.send(response);
-});
-
-server.post('/api/users', async (req, res) => {
-  const { body } = req;
-
-  const user = await userMethods.addUser({ ...body });
-
-  const response = JSON.stringify({
-    user,
-  });
-
-  res.send(response);
 });
 
 server.post('/api/login', async (req, res) => {
@@ -39,26 +25,20 @@ server.post('/api/login', async (req, res) => {
 
   const token = await userMethods.login({ ...body });
 
-  const response = JSON.stringify({
+  res.send({
     token
   });
-
-  res.send(response);
 })
 
 server.get('/api/me', async (req, res) => {
   const { headers } = req;
-  const { Authorization } = headers;
+  const { authorization } = headers;
 
-  const token: any = jwt.verify(Authorization.substring(4), KEY);
+  const token: any = jwt.verify(authorization.substring(4), KEY);
 
-  const user = userMethods.user(token.id);
-
-  const response = JSON.stringify({
-    user,
-  });
+  const user = await userMethods.user(token.id);
   
-  res.send(response);
+  res.send(user);
 });
 
 mongoose.connect(MONGO_URI, {}, err => {
