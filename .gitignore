@@ -1,0 +1,26 @@
+node_modules
+npm-debug.log
+
+# TypeScrit temporary/cache files
+**/.baseDir.ts
+**/.tscache/
+tscommand-*.tmp.txt
+
+**/dist/
+
+# Visual studio code
+.vscode
+
+# IDEA
+.idea
+tslint-microsoft-contrib.iml
+
+# vim swap files
+*.sw*
+
+**/tags
+
+# local npm cache
+.npm_cache
+
+out.html
